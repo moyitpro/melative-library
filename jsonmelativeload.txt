@@ -1,0 +1,60 @@
+Sub loadmelative()
+  dim socket1 as new httpsocket
+  // load anime infomation
+  dim data as string
+  data= socket1.get("http://melative.com/api/media/meta.json?anime=" + EncodeURLComponent(seriestitle.text) ,10)
+  if socket1.httpstatuscode = 200 then
+    //reset everything
+    baseinformation.text =  ""
+    description.text = ""
+    resourcelistbox.deleteallrows
+    //load from json
+    dim d as new dictionary 
+    d = json.parse(data)
+    dim contextd as new dictionary
+    dim basec as new collection
+    dim i, i2 as integer
+    dim t as new dictionary // hold temp info from collection
+    contextd = d.value("context")
+    
+    //load synopsistext
+    If d.haskey("description") = true then
+      description.text = DefineEncoding(d.value("description"),Encodings.UTF8)
+    else
+      description.text = "No description for this title"
+    end if
+    // Fill Base Information textbox
+    if d.haskey("base") then
+      basec = d.value("base")
+      for i = 1 to basec.Count
+        if basec.item(i) isa dictionary then
+          t=basec.item(i)
+          for i2 = 0 to t.Count -1
+            If i2 = 0 then
+              baseinformation.text = t.key(i2) + " : "+ t.value(t.key(i2))
+            else
+              baseinformation.text = t.key(i2) + " : "+ t.value(t.key(i2)) + endofline + baseinformation.text
+            end
+          next
+        end if
+      next
+    else
+      Baseinformation.text = "No base information available."
+    end if
+    If d.haskey("resources") = true then
+      dim resourcesc as new collection 
+      resourcesc  = d.value("resources")
+      for i = 1 to resourcesc.count
+        if resourcesc.item(i) isa dictionary then
+          t=resourcesc.item(i)
+          Resourcelistbox.AddRow(t.Value("url"))
+          If t.haskey("title")  then
+            Resourcelistbox.Cell(Resourcelistbox.LastIndex, 1) = t.value("title")
+          else
+            Resourcelistbox.Cell(Resourcelistbox.LastIndex, 1) = t.Value("url")
+          end if
+        end if
+      next
+    end if
+  end if
+End Sub

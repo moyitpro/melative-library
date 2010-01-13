@@ -1,0 +1,15 @@
+Melative Library Readme
+-----------------------
+Licensed under GNU Public License v3
+
+What is this?
+-----------------------
+This is a Melative Library tracker that allows users to easily update their experience from their desktops without going to the Melative website. This is an alternative to MyAnimeList and MAL Updater.
+
+All the functions require a Melative account: http://melative.com/register
+
+Compile Instructions and Requirements
+-----------------------
+To compile on Windows/Linux: You must remove any Mac OS X related code in order to compile. Not officially supported yet.
+
+This project will open in Realbasic 2009 R4 or higher. Cocoa version is coming soon as RealBasic 2010 comes out with Cocoa target.
